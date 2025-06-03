@@ -21,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.practice.dao.UserRepository;
 import com.practice.entities.Contact;
 import com.practice.entities.User;
+import com.practice.helper.Message;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -65,7 +68,7 @@ public class UserController {
 	// processing add contact form
 	@PostMapping("/process-contact")
 	public String processContact(@ModelAttribute Contact contact, @RequestParam("profileImage") MultipartFile file,
-			Principal principal) {
+			Principal principal,HttpSession session) {
 
 		try {
 			String name = principal.getName();
@@ -97,9 +100,16 @@ public class UserController {
 			System.out.println("DATA" + contact);
 
 			System.out.println("Added to database");
+			
+			// 🔔 Set success message in session
+			session.setAttribute("message", new Message("Your contact is added", "success"));
+			
 		} catch (Exception e) {
 			System.out.println("ERROR" + e.getMessage());
 			e.printStackTrace();
+			
+	        // 🔔 Set error message in session
+			session.setAttribute("message", new Message("Something went wrong", "danger"));
 		}
 		return "normal/add_contact_form";
 	}
