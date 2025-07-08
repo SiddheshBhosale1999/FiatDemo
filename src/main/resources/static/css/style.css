@@ -97,3 +97,42 @@ nav.bg-primary {
     align-items: center; /* This ensures both the icon and the input are vertically aligned */
     margin-bottom: 15px; /* Space between the input fields */
 }
+
+.my_profile_picture{
+	width: 30px;
+	height: 30px;
+	object-fit:cover;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
