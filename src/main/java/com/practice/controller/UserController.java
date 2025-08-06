@@ -14,6 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.event.PublicInvocationEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,8 @@ import com.practice.entities.User;
 import com.practice.helper.Message;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/user")
@@ -165,6 +168,48 @@ public class UserController {
 		
 		return "normal/contact_detail";
 	}
+	
+	//Delete Contact Handler
+	@GetMapping("/delete/{cid}")
+	public String deleteContact(@PathVariable("cid") Integer cId,Model model,Principal principal,HttpSession session) {
+		
+//		Optional<Contact> contactOptional = this.contactRepository.findById(cId);
+//		Contact contact = contactOptional.get();
+		Contact contact = this.contactRepository.findById(cId).get();
+		
+		//Add a check here
+		String userName = principal.getName();
+		User user = this.userRepository.getUserByUserName(userName);
+		if(user.getId() == contact.getUser().getId())
+		{
+	        // Remove the contact from the user's contact list (bi-directional cleanup)
+			user.getContacts().remove(contact);
+			
+	        // Save the updated user entity (to reflect the change)
+			this.userRepository.save(user);
+			
+	        // Delete the contact entity
+			this.contactRepository.delete(contact);
+			
+			contact.setUser(null);
+			this.contactRepository.delete(contact);
+			session.setAttribute("message", new Message("Contact Deleted Successfully", "success"));
+		}
+		else
+		{
+			session.setAttribute("message", new Message("You are not authorized to delete this", "danger"));
+		}
+
+		return "redirect:/user/show-contacts/0";
+	}
+	
+	//open update form handler
+	@PostMapping("/update-contact/{cid}")
+	public String updateForm() 
+	{
+		return "update_form";
+	}
+	
 }
 
 
