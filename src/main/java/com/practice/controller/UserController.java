@@ -263,6 +263,13 @@ public class UserController {
 		System.out.println("Contact ID " + contact.getcId());
 		return "redirect:/user/" + contact.getcId() + "/contact";
 	}
+	
+	//Your Profile Handler
+	@GetMapping("/profile")
+	public String myProfile(Model model) {
+		model.addAttribute("title","Profile Page");
+		return "normal/profile";
+	}
 }
 
 
