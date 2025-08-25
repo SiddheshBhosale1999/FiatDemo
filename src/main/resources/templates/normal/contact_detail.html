@@ -54,7 +54,10 @@
 					
 					<div class="container">
 					<a th:href="@{'/user/delete/'+ ${contact.cId}}" class="btn btn-danger btn-sm">Delete</a>
-					<button class="btn btn-warning btn-sm">Update</button>
+					
+					<form method="post" th:action="@{'/user/update-contact/'+${contact.cId}}">
+						<button type="submit" class="btn btn-primary btn-sm">Update</button>				
+					</form>
 					</div>
 				</div>
 
